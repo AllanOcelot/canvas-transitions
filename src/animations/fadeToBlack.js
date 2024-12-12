@@ -1,5 +1,5 @@
 export function fadeToBlack(context, elapsed, canvas) {
-  const duration = 1000; // 1 second
+  const duration = 1000;
   const progress = Math.min(elapsed / duration, 1);
 
   // Clear canvas
