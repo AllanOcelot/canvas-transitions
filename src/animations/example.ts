@@ -91,7 +91,18 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
   // This will be called each animation frame, but should be kept seperate from the drawing.
   function animationLogic(){
     objectsArray.forEach((item, index) => {
-      // The item is not at the bottom of the screen.
+
+
+      // brainstorm - how to give a set of "instructions" for "complex" animations
+      // maybe we would have an array of directions
+      // like ["down", "right", "up", "left"]
+      // each state incrementing the "direction" array by one, therfore moving onto the next animation state.
+      // we would then need to times the position by the arrayIndex(?) to simulate the square moving inwards?
+      // but this feels iffy to me.
+
+
+
+
       if(item.state === "Up"){
         if(objectsArray[index].getPositionY() > item.getHeight() ) {
           objectsArray[index].setPositionY( objectsArray[index].getPositionY() - 10)
@@ -103,37 +114,21 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
         }
       }
 
+      if(item.state === "Left"){
+        if(objectsArray[index].getPositionX() > item.getWidth() ) {
+          objectsArray[index].setPositionX( objectsArray[index].getPositionX() - 10)
+        }
+      }
       if(item.state === "Right"){
         if(objectsArray[index].getPositionX() < window.innerWidth - item.getWidth() ) {
           objectsArray[index].setPositionX( objectsArray[index].getPositionX() + 10)
         }
       }
-      if(item.state === "Right"){
-        if(objectsArray[index].getPositionX() > item.getWidth() ) {
-          objectsArray[index].setPositionX( objectsArray[index].getPositionX() - 10)
-        }
-      }
-
-
-
-
-
-
-
-
-
-
-
-
-//      objectsArray[index].setPositionX( objectsArray[index].getPositionX() + 1)
-
     });
   }
 
   function drawAnimation(){
     objectsArray.forEach((item, index) => {
-      let radius = item.getWidth() + item.getHeight();
-//      context.beginPath();
       context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight())
       context.fillStyle = item.color;
       context.fill();
@@ -142,8 +137,8 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
 
 
   // PROGRAM START'S HERE  
+  // populate objects
   const objectsArray = populateArrayList(1,0);
-
-  // Start the animation
+  // start animation
   mainFunction();
 }
