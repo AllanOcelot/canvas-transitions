@@ -1,8 +1,9 @@
 import { ScreenTransition } from './ScreenTransition.js';
 
 // Import animations here
-import { fadeToBlack } from '../animations/fadeToBlack.js';
-import { gridTest } from '../animations/grid_test.js';
+import { example }      from '../animations/example.ts';
+import { fadeToBlack }  from '../animations/fadeToBlack.js';
+import { gridTest }     from '../animations/grid_test.js';
 
 // HTML: id="transitionCanvas"
 const transition = new ScreenTransition('transitionCanvas');
@@ -11,7 +12,7 @@ const transition = new ScreenTransition('transitionCanvas');
 window.setTimeout(
   function(){
     console.log("Fire transition");
-    transition.startAnimation(gridTest, () => {
+    transition.startAnimation(example, () => {
       console.log('Animation complete, user callback triggered.');
     });
 },2000)

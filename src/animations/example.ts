@@ -1,9 +1,4 @@
 export function example(context: CanvasRenderingContext2D, elapsed: number, canvas: object) {
-  interface context {
-
-  }
-
-
 
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
@@ -23,33 +18,33 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
     private height: number
     private position: [number, number]
     public color: string
-
+    public state: string
 
     constructor(position:[number, number], width: number, height: number, color: string) {
-      this.width = width;
-      this.height = height;
-      this.color = color;
-      this.position = position;
+      this.width = width
+      this.height = height
+      this.color = color
+      this.position = position
+      this.state = "Down"
     }
 
     getPositionX(){
       return this.position[0]
     }
-    setPositionX(newVal: number){
-      this.position[0] = newVal
-    }
     getPositionY(){
       return this.position[1]
     }
-    setPositionY(newVal: number){
-      this.position[1] = newVal
-    }
-
     getWidth(){
       return this.width
     }
     getHeight(){
       return this.height
+    }
+    setPositionX(newVal: number){
+      this.position[0] = newVal
+    }
+    setPositionY(newVal: number){
+      this.position[1] = newVal
     }
   }
 
@@ -61,10 +56,10 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
   function populateArrayList(amount: number,offset: number){
     let localArray = []
     
-    let itemHeight = 20;
-    let itemWidth  = 20;
+    let itemHeight = 100;
+    let itemWidth  = 100;
 
-    let localItem  = new ItemToDraw([itemHeight / 2, itemWidth / 2], itemWidth, itemHeight, "black")
+    let localItem  = new ItemToDraw([0, 0], itemWidth, itemHeight, "black")
 
     localArray.push(localItem)
     return localArray
@@ -72,42 +67,83 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
 
 
 
-  const shitToDraw = populateArrayList(1,0);
-
 
   // This is our main drawing function
-  function drawReveal() {
+  function mainFunction() {
     if (progress >= 30000) {
-      // Stop the animation when progress is complete
       return;
     }
 
+    // Deal with our items and do logic on them.
+    animationLogic();
 
-    // we will draw each item, and update it's position in relation to the animation
-    // I know enough about "game design" to know this is NOT how we do it future me
-    // this is just Proof of concept, CHILL OUT FUTURE ME.
-
-
-
-    shitToDraw.forEach((item, index) => {
-      let radius = item.getWidth() + item.getHeight();
-      context.beginPath();
-      context.arc(item.getPositionX(), item.getPositionY(), radius, 0, 2 * Math.PI, false);
-      context.fillStyle = item.color;
-      context.fill();
-
-      console.log(shitToDraw)
-      shitToDraw[index].setPositionX( shitToDraw[index].getPositionX() + 5)
-      shitToDraw[index].setPositionY( shitToDraw[index].getPositionY() + 5)
-    });
+    // Draw the results of the logic.
+    drawAnimation();
 
     // Increment progress
     progress += animationSpeed;
 
     // Continue the animation
-    requestAnimationFrame(drawReveal);
+    requestAnimationFrame(mainFunction);
   }
 
+
+  // This will be called each animation frame, but should be kept seperate from the drawing.
+  function animationLogic(){
+    objectsArray.forEach((item, index) => {
+      // The item is not at the bottom of the screen.
+      if(item.state === "Up"){
+        if(objectsArray[index].getPositionY() > item.getHeight() ) {
+          objectsArray[index].setPositionY( objectsArray[index].getPositionY() - 10)
+        }
+      }
+      if(item.state === "Down"){
+        if(objectsArray[index].getPositionY() < window.innerHeight - item.getHeight() ) {
+          objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 10)
+        }
+      }
+
+      if(item.state === "Right"){
+        if(objectsArray[index].getPositionX() < window.innerWidth - item.getWidth() ) {
+          objectsArray[index].setPositionX( objectsArray[index].getPositionX() + 10)
+        }
+      }
+      if(item.state === "Right"){
+        if(objectsArray[index].getPositionX() > item.getWidth() ) {
+          objectsArray[index].setPositionX( objectsArray[index].getPositionX() - 10)
+        }
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+//      objectsArray[index].setPositionX( objectsArray[index].getPositionX() + 1)
+
+    });
+  }
+
+  function drawAnimation(){
+    objectsArray.forEach((item, index) => {
+      let radius = item.getWidth() + item.getHeight();
+//      context.beginPath();
+      context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight())
+      context.fillStyle = item.color;
+      context.fill();
+    });
+  }
+
+
+  // PROGRAM START'S HERE  
+  const objectsArray = populateArrayList(1,0);
+
   // Start the animation
-  drawReveal();
+  mainFunction();
 }
