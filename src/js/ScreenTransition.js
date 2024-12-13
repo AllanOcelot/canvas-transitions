@@ -11,6 +11,7 @@ export class ScreenTransition {
       this.canvas.height = window.innerHeight;
   }
 
+  /// yeeeaaahhh I don't like this.
   startAnimation(animationFunction, callback) {
       const startTime = performance.now();
       const renderFrame = (currentTime) => {
