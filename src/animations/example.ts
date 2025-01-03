@@ -7,6 +7,9 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
   let startTime = performance.now(); // Record the animation start time
   let delay = 500; // Delay in milliseconds between each object's animation
 
+
+  let mainAnimationFrame: any;
+
   // Progress is a value, from 0 - 100. 
   // At 100, the animation should be complete.
   // We want users to pass in a "time" for their transition, so we will have to do some math on incemennting this.
@@ -23,13 +26,15 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
     private position: [number, number]
     public color: string
     public state: string
+    public instructions: []
 
-    constructor(position:[number, number], width: number, height: number, color: string) {
+    constructor(position:[number, number], width: number, height: number, color: string, instructions: []) {
       this.width = width
       this.height = height
       this.color = color
       this.position = position
       this.state = "Down"
+      this.instructions = []
     }
 
     getPositionX(){
@@ -76,7 +81,9 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
 
   // This is our main drawing function
   function mainFunction() {
-    if (progress >= 30000) {
+    console.log(progress)
+    if (progress >= 300) {
+      cancelAnimationFrame(mainAnimationFrame);
       return;
     }
 
@@ -89,19 +96,12 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
 
 
     // Increment progress
-    progress += animationSpeed;
+    progress++;
 
     // Continue the animation
-    requestAnimationFrame(mainFunction);
+    mainAnimationFrame = requestAnimationFrame(mainFunction);
   }
 
-
-  // maybe objects should have a "object instruction" function, that based upon state, does stuff?
-  function objectInstruction(){
-    // i.e 
-    // if object is not at the bottom of the screen, go down
-    // then, step 2 
-  }
 
 
   // OPERATIONS ON OBJECTS SHOULD BE ONLY DONE HERE
@@ -121,37 +121,12 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
         if(item.state === "Down"){
           if(objectsArray[index].getPositionY() < window.innerHeight - item.getHeight() ) {
             objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 10)
+          }else {
+            console.log('this item has finished this action, how do we keep track of that')
           }
         }
       }
     });
-
-
-/*
-    objectsArray.forEach((item, index) => {
-      if(item.state === "Up"){
-        if(objectsArray[index].getPositionY() > item.getHeight() ) {
-          objectsArray[index].setPositionY( objectsArray[index].getPositionY() - 10)
-        }
-      }
-      if(item.state === "Down"){
-        if(objectsArray[index].getPositionY() < window.innerHeight - item.getHeight() ) {
-          objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 10)
-        }
-      }
-
-      if(item.state === "Left"){
-        if(objectsArray[index].getPositionX() > item.getWidth() ) {
-          objectsArray[index].setPositionX( objectsArray[index].getPositionX() - 10)
-        }
-      }
-      if(item.state === "Right"){
-        if(objectsArray[index].getPositionX() < window.innerWidth - item.getWidth() ) {
-          objectsArray[index].setPositionX( objectsArray[index].getPositionX() + 10)
-        }
-      }
-    });
-    */
   }
 
   // We need to think about adding delays in for multiple objects
