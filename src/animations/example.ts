@@ -57,11 +57,17 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
     let localArray = []
     
     let itemHeight = 100;
-    let itemWidth  = 100;
+    let itemWidth  = window.innerWidth / amount;
 
-    let localItem  = new ItemToDraw([0, 0], itemWidth, itemHeight, "black")
+    let itemXPos = 0;
 
-    localArray.push(localItem)
+    for(let i = 0; i < amount; i++){
+      if(i > 0){
+        itemXPos += itemWidth
+      }
+      let localItem  = new ItemToDraw([itemXPos, 0], itemWidth, itemHeight, "black")
+      localArray.push(localItem)
+    }
     return localArray
   }
 
@@ -74,17 +80,28 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
       return;
     }
 
-    // Deal with our items and do logic on them.
-    animationLogic();
 
     // Draw the results of the logic.
     drawAnimation();
+
+    // Deal with our items and do logic on them.
+    animationLogic();
+
+
 
     // Increment progress
     progress += animationSpeed;
 
     // Continue the animation
     requestAnimationFrame(mainFunction);
+  }
+
+
+  // maybe objects should have a "object instruction" function, that based upon state, does stuff?
+  function objectInstruction(){
+    // i.e 
+    // if object is not at the bottom of the screen, go down
+    // then, step 2 
   }
 
 
@@ -138,7 +155,7 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
 
   // PROGRAM START'S HERE  
   // populate objects
-  const objectsArray = populateArrayList(1,0);
+  const objectsArray = populateArrayList(5,0);
   // start animation
   mainFunction();
 }
