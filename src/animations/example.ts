@@ -1,17 +1,11 @@
-export function example(context: CanvasRenderingContext2D, canvas: object) {
+export function example(context: CanvasRenderingContext2D, winWidth: number, winHeight: number) {
 
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
 
   // declare the start of the global animation 
   let startTime = performance.now(); // Record the animation start time
-  let delay = 500; // Delay in milliseconds between each object's animation
-
-
-  // win height width
-  let winHeight = window.innerHeight
-  let winWidth  = window.innerWidth
-
+  let delay = 1000; // Delay in milliseconds between each object's animation
 
   let mainAnimationFrame : number;
 
@@ -31,15 +25,14 @@ export function example(context: CanvasRenderingContext2D, canvas: object) {
     private position: [number, number]
     public color: string
     public state: string
-    public isFinished: boolean
+    public isFinished: boolean = false
 
-    constructor(position:[number, number], width: number, height: number, color: string, isFinished) {
+    constructor(position:[number, number], width: number, height: number, color: string) {
       this.width = width
       this.height = height
       this.color = color
       this.position = position
       this.state = "Down"
-      this.isFinished = isFinished
     }
 
     getPositionX(){
@@ -69,6 +62,10 @@ export function example(context: CanvasRenderingContext2D, canvas: object) {
     let itemHeight = 100;
     let itemWidth  = winWidth / amount;
 
+    console.log('-------------')
+    console.log(itemWidth)
+    console.log('-------------')
+
     let itemXPos = 0;
 
     for(let i = 0; i < amount; i++){
@@ -92,7 +89,7 @@ export function example(context: CanvasRenderingContext2D, canvas: object) {
     console.log(progress)
 
     // Stop the animation when progress is complete and all items are finished
-    if (progress >= 1 ) {
+    if (progress >= 1  || objectsArray.every(obj => obj.isFinished)) {
         console.log('Stopping animation frame...');
         cancelAnimationFrame(mainAnimationFrame); // Cancel the animation
         return;
@@ -128,9 +125,10 @@ export function example(context: CanvasRenderingContext2D, canvas: object) {
       if (currentTime >= itemStartTime) {
         if(item.state === "Down"){
           if(objectsArray[index].getPositionY() < winHeight - item.getHeight() ) {
-            objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 10)
+            objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 1)
           }else {
-
+            console.log("" + index + "is finished")
+            objectsArray[index].isFinished = true
           }
         }
       }
