@@ -1,4 +1,4 @@
-export function example(context: CanvasRenderingContext2D, elapsed: number, canvas: object) {
+export function example(context: CanvasRenderingContext2D, canvas: object) {
 
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
