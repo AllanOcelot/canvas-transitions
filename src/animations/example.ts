@@ -3,6 +3,10 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
 
+  // declare the start of the global animation 
+  let startTime = performance.now(); // Record the animation start time
+  let delay = 500; // Delay in milliseconds between each object's animation
+
   // Progress is a value, from 0 - 100. 
   // At 100, the animation should be complete.
   // We want users to pass in a "time" for their transition, so we will have to do some math on incemennting this.
@@ -48,11 +52,7 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
     }
   }
 
-  // we will add an amount of "items to draw"
-  // to our list, offsetting them by X
-  // The logic yes it's a pain to work with an array of items when you might be animation only ONE
-  // BUT the pay off it's easier to work with multiple when you need to - and I'm making an assumption  we will need to more
-  // than we wont.
+  // Populate items we want to animate.
   function populateArrayList(amount: number,offset: number){
     let localArray = []
     
@@ -80,12 +80,11 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
       return;
     }
 
-
     // Draw the results of the logic.
-    drawAnimation();
+    drawAnimation()
 
     // Deal with our items and do logic on them.
-    animationLogic();
+    animationLogic()
 
 
 
@@ -105,21 +104,28 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
   }
 
 
-  // This will be called each animation frame, but should be kept seperate from the drawing.
+  // OPERATIONS ON OBJECTS SHOULD BE ONLY DONE HERE
+  // NOT IN THE DRAWER.
+  // WHAT DOES THE DRAW-ER DO ALLAN!? IT DRAW(s)
   function animationLogic(){
+    let currentTime = performance.now(); // Current time in the animation
+
+
     objectsArray.forEach((item, index) => {
+      let itemStartTime = startTime + index * delay; // Calculate the start time for this object
+  
+      if (currentTime >= itemStartTime) {
+        if(item.state === "Down"){
+          if(objectsArray[index].getPositionY() < window.innerHeight - item.getHeight() ) {
+            objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 10)
+          }
+        }
+      }
+    });
 
 
-      // brainstorm - how to give a set of "instructions" for "complex" animations
-      // maybe we would have an array of directions
-      // like ["down", "right", "up", "left"]
-      // each state incrementing the "direction" array by one, therfore moving onto the next animation state.
-      // we would then need to times the position by the arrayIndex(?) to simulate the square moving inwards?
-      // but this feels iffy to me.
-
-
-
-
+/*
+    objectsArray.forEach((item, index) => {
       if(item.state === "Up"){
         if(objectsArray[index].getPositionY() > item.getHeight() ) {
           objectsArray[index].setPositionY( objectsArray[index].getPositionY() - 10)
@@ -142,13 +148,18 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
         }
       }
     });
+    */
   }
 
-  function drawAnimation(){
+  // We need to think about adding delays in for multiple objects
+  // now, we can do a setTimeout, for each one, but we'd need to ensure we have a defined "finished"
+  // state for each item, this brings us back to 
+  // the whole discussion on "how do we give a list of commands to an object in an easy way, idiot"
+  // so think about that Allan
+  function drawAnimation() {
     objectsArray.forEach((item, index) => {
-      context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight())
-      context.fillStyle = item.color;
-      context.fill();
+        context.fillStyle = item.color;
+        context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
     });
   }
 
