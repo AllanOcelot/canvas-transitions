@@ -2,8 +2,6 @@ import { ScreenTransition } from './ScreenTransition.js';
 
 // Import animations here
 import { example }      from '../animations/example.ts';
-import { fadeToBlack }  from '../animations/fadeToBlack.js';
-import { gridTest }     from '../animations/grid_test.js';
 
 // HTML: id="transitionCanvas"
 const transition = new ScreenTransition('transitionCanvas');

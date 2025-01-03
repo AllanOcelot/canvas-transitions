@@ -8,7 +8,12 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
   let delay = 500; // Delay in milliseconds between each object's animation
 
 
-  let mainAnimationFrame: any;
+  // win height width
+  let winHeight = window.innerHeight
+  let winWidth  = window.innerWidth
+
+
+  let mainAnimationFrame : number;
 
   // Progress is a value, from 0 - 100. 
   // At 100, the animation should be complete.
@@ -26,15 +31,15 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
     private position: [number, number]
     public color: string
     public state: string
-    public instructions: []
+    public isFinished: boolean
 
-    constructor(position:[number, number], width: number, height: number, color: string, instructions: []) {
+    constructor(position:[number, number], width: number, height: number, color: string, isFinished) {
       this.width = width
       this.height = height
       this.color = color
       this.position = position
       this.state = "Down"
-      this.instructions = []
+      this.isFinished = isFinished
     }
 
     getPositionX(){
@@ -62,7 +67,7 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
     let localArray = []
     
     let itemHeight = 100;
-    let itemWidth  = window.innerWidth / amount;
+    let itemWidth  = winWidth / amount;
 
     let itemXPos = 0;
 
@@ -80,25 +85,24 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
 
 
   // This is our main drawing function
-  function mainFunction() {
+  function mainFunction(timestamp: number) {
+    const elapsed = timestamp - startTime;
+    progress = Math.min(elapsed / 5000, 1);
+
     console.log(progress)
-    if (progress >= 300) {
-      cancelAnimationFrame(mainAnimationFrame);
-      return;
+
+    // Stop the animation when progress is complete and all items are finished
+    if (progress >= 1 ) {
+        console.log('Stopping animation frame...');
+        cancelAnimationFrame(mainAnimationFrame); // Cancel the animation
+        return;
     }
 
-    // Draw the results of the logic.
-    drawAnimation()
+    // Draw and update logic
+    drawAnimation();
+    animationLogic();
 
-    // Deal with our items and do logic on them.
-    animationLogic()
-
-
-
-    // Increment progress
-    progress++;
-
-    // Continue the animation
+    // Schedule the next frame
     mainAnimationFrame = requestAnimationFrame(mainFunction);
   }
 
@@ -115,14 +119,18 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
     // ensure that time has passed ( the delay we want )
     // then check if it's state is blah, and do blah.
     objectsArray.forEach((item, index) => {
+      if(item.isFinished){
+        return;
+      }
+
       let itemStartTime = startTime + index * delay; // Calculate the start time for this object
   
       if (currentTime >= itemStartTime) {
         if(item.state === "Down"){
-          if(objectsArray[index].getPositionY() < window.innerHeight - item.getHeight() ) {
+          if(objectsArray[index].getPositionY() < winHeight - item.getHeight() ) {
             objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 10)
           }else {
-            console.log('this item has finished this action, how do we keep track of that')
+
           }
         }
       }
@@ -146,5 +154,5 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
   // populate objects
   const objectsArray = populateArrayList(5,0);
   // start animation
-  mainFunction();
+  mainAnimationFrame = requestAnimationFrame(mainFunction);
 }
