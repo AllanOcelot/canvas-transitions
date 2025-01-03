@@ -65,7 +65,7 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
       if(i > 0){
         itemXPos += itemWidth
       }
-      let localItem  = new ItemToDraw([itemXPos, 0], itemWidth, itemHeight, "black")
+      let localItem  = new ItemToDraw([itemXPos, -itemHeight], itemWidth, itemHeight, "black")
       localArray.push(localItem)
     }
     return localArray
@@ -111,6 +111,9 @@ export function example(context: CanvasRenderingContext2D, elapsed: number, canv
     let currentTime = performance.now(); // Current time in the animation
 
 
+    // loop over each item we want to animate
+    // ensure that time has passed ( the delay we want )
+    // then check if it's state is blah, and do blah.
     objectsArray.forEach((item, index) => {
       let itemStartTime = startTime + index * delay; // Calculate the start time for this object
   
