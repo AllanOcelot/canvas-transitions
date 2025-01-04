@@ -7,7 +7,8 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   let startTime = performance.now(); // Record the animation start time
   let delay = 50; // Delay in milliseconds between each object's animation
 
-  let mainAnimationFrame : number;
+  let drawAnimationFrame  : number;
+  let clearAnimationFrame : number;
 
   // Progress is a value, from 0 - 100. 
   // At 100, the animation should be complete.
@@ -18,8 +19,8 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   const animationSpeed = 1;
 
 
-  function allItemsFinished(){
-    return objectsArray.every(obj => obj.isFinished)
+  function allItemsFinished(itemsToCheck){
+    return itemsToCheck.every(obj => obj.isFinished)
   }
 
   // Each item drawn to scheme should follow a basic class.
@@ -31,13 +32,15 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
     public color: string
     public state: string
     public isFinished: boolean = false
+    private isClear:   boolean = false
 
-    constructor(position:[number, number], width: number, height: number, color: string) {
-      this.width = width
-      this.height = height
-      this.color = color
+    constructor(position:[number, number], width: number, height: number, color: string, isClear: boolean) {
+      this.width    = width
+      this.height   = height
+      this.color    = color
       this.position = position
-      this.state = "Down"
+      this.state    = "Down"
+      this.isClear  = isClear
     }
 
     getPositionX(){
@@ -61,9 +64,9 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   }
 
   // Populate items we want to animate.
-  function populateArrayList(amount: number, offset: number){
+  function populateAnimationItems(amount: number, offset: number, isClear: boolean){
     let localArray = []
-   
+    
     let itemHeight = winHeight / amount;
     let itemWidth  = winWidth / amount;
     let itemXPos = 0;
@@ -72,7 +75,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
       if(i > 0){
         itemXPos += itemWidth
       }
-      let localItem  = new ItemToDraw([itemXPos, -itemHeight], itemWidth, itemHeight, "black")
+      let localItem  = new ItemToDraw([itemXPos, -itemHeight], itemWidth, itemHeight, "black", isClear)
       localArray.push(localItem)
     }
     return localArray
@@ -83,20 +86,28 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
   // This is our main drawing function
   function mainFunction(timestamp: number) {
-
-    // Stop the animation when all items have animated.
-    if (allItemsFinished() ) {
+    if (allItemsFinished(itemsToAnimate)) {
         console.log('Stopping animation frame...');
-        cancelAnimationFrame(mainAnimationFrame); // Cancel the animation
-        return;
+        cancelAnimationFrame(drawAnimationFrame); // Cancel the animation
+        console.log('starting clear frame req')
+        clearAnimationFrame = requestAnimationFrame(mainFunction);
     }
+    if(allItemsFinished(itemsToClear)){
+      console.log('all clearing items complete')
+      cancelAnimationFrame(clearAnimationFrame);
+    }
+
+    if(allItemsFinished(itemsToAnimate) && allItemsFinished(itemsToClear)){
+      return;
+    }
+
 
     // Draw and update logic
     drawAnimation();
     animationLogic();
 
     // Schedule the next frame
-    mainAnimationFrame = requestAnimationFrame(mainFunction);
+    drawAnimationFrame = requestAnimationFrame(mainFunction);
   }
 
 
@@ -110,8 +121,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
     // loop over each item we want to animate
     // ensure that time has passed ( the delay we want )
-    // then check if it's state is blah, and do blah.
-    objectsArray.forEach((item, index) => {
+    itemsToAnimate.forEach((item, index) => {
       if(item.isFinished){
         return;
       }
@@ -120,33 +130,61 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   
       if (currentTime >= itemStartTime) {
         if(item.state === "Down"){
-          if(objectsArray[index].getPositionY() < winHeight - item.getHeight() ) {
-            objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 60)
+          if(itemsToAnimate[index].getPositionY() < winHeight - item.getHeight() ) {
+            itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 60)
           }else{
             console.log("" + index + "is finished")
-            objectsArray[index].isFinished = true
+            itemsToAnimate[index].isFinished = true
           }
         }
       }
     });
+
+
+    // If the original items have finished their animation , we now need to clear the screen
+    if(allItemsFinished(itemsToAnimate)){
+      itemsToClear.forEach((item, index) => {
+        if(item.isFinished){
+          return;
+        }
+  
+        let itemStartTime = startTime + index * delay; // Calculate the start time for this object
+    
+        if (currentTime >= itemStartTime) {
+          if(item.state === "Down"){
+            if(itemsToClear[index].getPositionY() < winHeight - item.getHeight() ) {
+              itemsToClear[index].setPositionY( itemsToClear[index].getPositionY() + 60)
+            }else{
+              console.log("" + index + "is finished")
+              itemsToClear[index].isFinished = true
+            }
+          }
+        }
+      })
+    }
   }
 
-  // We need to think about adding delays in for multiple objects
-  // now, we can do a setTimeout, for each one, but we'd need to ensure we have a defined "finished"
-  // state for each item, this brings us back to 
-  // the whole discussion on "how do we give a list of commands to an object in an easy way, idiot"
-  // so think about that Allan
   function drawAnimation() {
-    objectsArray.forEach((item, index) => {
+    if(!allItemsFinished(itemsToAnimate)){
+      itemsToAnimate.forEach((item, index) => {
+          context.fillStyle = item.color;
+          context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
+      });
+    }else{
+      itemsToClear.forEach((item, index) => {
         context.fillStyle = item.color;
-        context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
-    });
+        context.clearRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
+      });
+    }
+
   }
 
 
   // PROGRAM START'S HERE  
-  // populate objects
-  const objectsArray = populateArrayList(5,0);
+  // populate objects we want to animate
+  const itemsToAnimate = populateAnimationItems(5,0,false)
+  const itemsToClear   = populateAnimationItems(5,0,false)
+
   // start animation
-  mainAnimationFrame = requestAnimationFrame(mainFunction);
+  drawAnimationFrame = requestAnimationFrame(mainFunction);
 }
