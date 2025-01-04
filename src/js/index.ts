@@ -22,11 +22,6 @@ function resizeCanvas() {
 }
 
 
-
-
-// HTML: id="transitionCanvas"
-//const transition = new ScreenTransition('transitionCanvas');
-
 // Trigger the animation
 resizeCanvas()
 window.setTimeout(

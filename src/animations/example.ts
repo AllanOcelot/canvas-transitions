@@ -5,7 +5,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
   // declare the start of the global animation 
   let startTime = performance.now(); // Record the animation start time
-  let delay = 1000; // Delay in milliseconds between each object's animation
+  let delay = 50; // Delay in milliseconds between each object's animation
 
   let mainAnimationFrame : number;
 
@@ -64,11 +64,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   function populateArrayList(amount: number, offset: number){
     let localArray = []
    
-    console.log('window width is' + winWidth)
-    console.log(winWidth / amount)
-
-
-    let itemHeight = 100;
+    let itemHeight = winHeight / amount;
     let itemWidth  = winWidth / amount;
     let itemXPos = 0;
 
@@ -87,13 +83,9 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
   // This is our main drawing function
   function mainFunction(timestamp: number) {
-    const elapsed = timestamp - startTime;
-    progress = Math.min(elapsed / 5000, 1);
 
-//    console.log(progress)
-
-    // Stop the animation when progress is complete and all items are finished
-    if (progress >= 1 || allItemsFinished() ) {
+    // Stop the animation when all items have animated.
+    if (allItemsFinished() ) {
         console.log('Stopping animation frame...');
         cancelAnimationFrame(mainAnimationFrame); // Cancel the animation
         return;
@@ -129,7 +121,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
       if (currentTime >= itemStartTime) {
         if(item.state === "Down"){
           if(objectsArray[index].getPositionY() < winHeight - item.getHeight() ) {
-            objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 1)
+            objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 60)
           }else{
             console.log("" + index + "is finished")
             objectsArray[index].isFinished = true
