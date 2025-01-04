@@ -3,21 +3,12 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
 
-  // declare the start of the global animation 
-  let startTime = performance.now(); // Record the animation start time
-  let delay = 50; // Delay in milliseconds between each object's animation
+
+  let startTime = performance.now(); 
+  let delay = 50; 
 
   let drawAnimationFrame  : number;
   let clearAnimationFrame : number;
-
-  // Progress is a value, from 0 - 100. 
-  // At 100, the animation should be complete.
-  // We want users to pass in a "time" for their transition, so we will have to do some math on incemennting this.
-  let progress = 0;
-
-  // unsure if needed.
-  const animationSpeed = 1;
-
 
   function allItemsFinished(itemsToCheck){
     return itemsToCheck.every(obj => obj.isFinished)
@@ -87,9 +78,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   // This is our main drawing function
   function mainFunction(timestamp: number) {
     if (allItemsFinished(itemsToAnimate)) {
-        console.log('Stopping animation frame...');
-        cancelAnimationFrame(drawAnimationFrame); // Cancel the animation
-        console.log('starting clear frame req')
+        cancelAnimationFrame(drawAnimationFrame);
         clearAnimationFrame = requestAnimationFrame(mainFunction);
     }
     if(allItemsFinished(itemsToClear)){
@@ -98,6 +87,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
     }
 
     if(allItemsFinished(itemsToAnimate) && allItemsFinished(itemsToClear)){
+      console.log('Animation is completed')
       return;
     }
 
@@ -133,7 +123,6 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
           if(itemsToAnimate[index].getPositionY() < winHeight - item.getHeight() ) {
             itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 60)
           }else{
-            console.log("" + index + "is finished")
             itemsToAnimate[index].isFinished = true
           }
         }
@@ -155,7 +144,6 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
             if(itemsToClear[index].getPositionY() < winHeight - item.getHeight() ) {
               itemsToClear[index].setPositionY( itemsToClear[index].getPositionY() + 60)
             }else{
-              console.log("" + index + "is finished")
               itemsToClear[index].isFinished = true
             }
           }
@@ -170,13 +158,13 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
           context.fillStyle = item.color;
           context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
       });
-    }else{
+    }
+    if(allItemsFinished(itemsToAnimate) && !allItemsFinished(itemsToClear)){
       itemsToClear.forEach((item, index) => {
         context.fillStyle = item.color;
         context.clearRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
       });
     }
-
   }
 
 
