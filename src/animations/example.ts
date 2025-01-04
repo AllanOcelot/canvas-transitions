@@ -17,6 +17,11 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   // unsure if needed.
   const animationSpeed = 1;
 
+
+  function allItemsFinished(){
+    return objectsArray.every(obj => obj.isFinished)
+  }
+
   // Each item drawn to scheme should follow a basic class.
   // this will be imported in future.
   class ItemToDraw {
@@ -56,16 +61,15 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   }
 
   // Populate items we want to animate.
-  function populateArrayList(amount: number,offset: number){
+  function populateArrayList(amount: number, offset: number){
     let localArray = []
-    
+   
+    console.log('window width is' + winWidth)
+    console.log(winWidth / amount)
+
+
     let itemHeight = 100;
     let itemWidth  = winWidth / amount;
-
-    console.log('-------------')
-    console.log(itemWidth)
-    console.log('-------------')
-
     let itemXPos = 0;
 
     for(let i = 0; i < amount; i++){
@@ -86,10 +90,10 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
     const elapsed = timestamp - startTime;
     progress = Math.min(elapsed / 5000, 1);
 
-    console.log(progress)
+//    console.log(progress)
 
     // Stop the animation when progress is complete and all items are finished
-    if (progress >= 1  || objectsArray.every(obj => obj.isFinished)) {
+    if (progress >= 1 || allItemsFinished() ) {
         console.log('Stopping animation frame...');
         cancelAnimationFrame(mainAnimationFrame); // Cancel the animation
         return;
@@ -126,7 +130,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
         if(item.state === "Down"){
           if(objectsArray[index].getPositionY() < winHeight - item.getHeight() ) {
             objectsArray[index].setPositionY( objectsArray[index].getPositionY() + 1)
-          }else {
+          }else{
             console.log("" + index + "is finished")
             objectsArray[index].isFinished = true
           }
