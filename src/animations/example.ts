@@ -1,4 +1,6 @@
-export function example(context: CanvasRenderingContext2D, winWidth: number, winHeight: number) {
+import { ItemToDraw  } from "../util/item";
+
+export function example(context: CanvasRenderingContext2D, winWidth: number, winHeight: number, type: string) {
 
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
@@ -16,43 +18,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
   // Each item drawn to scheme should follow a basic class.
   // this will be imported in future.
-  class ItemToDraw {
-    private width: number
-    private height: number
-    private position: [number, number]
-    public color: string
-    public state: string
-    public isFinished: boolean = false
-    private isClear:   boolean = false
 
-    constructor(position:[number, number], width: number, height: number, color: string, isClear: boolean) {
-      this.width    = width
-      this.height   = height
-      this.color    = color
-      this.position = position
-      this.state    = "Down"
-      this.isClear  = isClear
-    }
-
-    getPositionX(){
-      return this.position[0]
-    }
-    getPositionY(){
-      return this.position[1]
-    }
-    getWidth(){
-      return this.width
-    }
-    getHeight(){
-      return this.height
-    }
-    setPositionX(newVal: number){
-      this.position[0] = newVal
-    }
-    setPositionY(newVal: number){
-      this.position[1] = newVal
-    }
-  }
 
   // Populate items we want to animate.
   function populateAnimationItems(amount: number, offset: number, isClear: boolean) {
@@ -75,19 +41,15 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
 
   // This is our main drawing function
-  let animationFrame: number; // Use a single frame ID
+  let animationFrame: number;
 
   function mainFunction(timestamp: number) {
-    // Check if all items are finished
-    const animateDone = allItemsFinished(itemsToAnimate);
-    const clearDone = allItemsFinished(itemsToClear);
-  
-    // If both animations and clearing are done, stop the animation loop
-    if (animateDone && clearDone) {
-      console.log("All animations and clearing complete.");
+    // Check if all items are finished  
+    if (allItemsFinished(itemsToAnimate)) {
+      console.log("All animations complete.");
       cancelAnimationFrame(animationFrame);
       clearItems();
-      const event = new Event("transitionComplete");
+      const event = new Event("fillComplete");
       document.dispatchEvent(event);
       return;
     }
@@ -125,26 +87,6 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
         }
       }
     });
-
-
-    // If the original items have finished their animation , we now need to clear the screen
-    if(allItemsFinished(itemsToAnimate)){
-      itemsToClear.forEach((item, index) => {
-        if(item.isFinished){
-          return;
-        }
-        let itemStartTime = startTime + index * delay; // Calculate the start time for this object
-        if (currentTime >= itemStartTime) {
-          if(item.state === "Down"){
-            if(itemsToClear[index].getPositionY() < winHeight - item.getHeight() ) {
-              itemsToClear[index].setPositionY( itemsToClear[index].getPositionY() + 60)
-            }else{
-              itemsToClear[index].isFinished = true
-            }
-          }
-        }
-      })
-    }
   }
 
   function drawAnimation() {
@@ -154,28 +96,26 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
           context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
       });
     }
-    if(allItemsFinished(itemsToAnimate) && !allItemsFinished(itemsToClear)){
-      itemsToClear.forEach((item, index) => {
-        context.clearRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
-      });
-    }
   }
 
 
   // PROGRAM START'S HERE  
-  // populate objects we want to animate
   function createItems() {
     clearItems(); // Clear the previous items
     startTime = performance.now(); // Reset start time
   
     // Repopulate and reset
+    if(type === "fill"){
+      console.log('we should fire the fill')
+//      itemsToAnimate = populateAnimationItems(5, 0, false);
+    }
+    if(type === "clear"){
+      console.log('we should fire the clear')
+//      itemsToClear = populateAnimationItems(5, 0, false);
+    }
+
     itemsToAnimate = populateAnimationItems(5, 0, false);
-    itemsToClear = populateAnimationItems(5, 0, false);
-  
-    console.log("Initial positions for itemsToAnimate:");
-    itemsToAnimate.forEach((item, index) => {
-      console.log(`Item ${index} Position: (${item.getPositionX()}, ${item.getPositionY()})`);
-    });
+    // itemsToClear = populateAnimationItems(5, 0, false);
   
     drawAnimationFrame = requestAnimationFrame(mainFunction);
   }

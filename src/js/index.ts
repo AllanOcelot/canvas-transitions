@@ -47,7 +47,7 @@ document.addEventListener("startTransition", (event) => {
 
 function createTransition(){
   createCanvas()
-  const animation = example(context, winWidth, winHeight)
+  const animation = example(context, winWidth, winHeight, 'fill')
 }
 
 
@@ -62,7 +62,7 @@ document.addEventListener("clearTransition", (event) => {
 
 function clearTransition(){
   if(canvas){
-    const animation = example(context, winWidth, winHeight)
+    const animation = example(context, winWidth, winHeight, 'clear')
   }
   console.error('There is no canvas defined')
 }
@@ -101,10 +101,13 @@ document.addEventListener("transitionComplete", () => {
   removeCanvas()
 })
 
+document.addEventListener("fillComplete", () => {
+  console.log('CanvasTransition : Fill has completed')
+})
+
 
 // Trigger the animation
 function createCanvas(){
-  console.log(canvas)
   if(!canvas){
     console.log('adding canvas')
     canvas = document.createElement('canvas')
