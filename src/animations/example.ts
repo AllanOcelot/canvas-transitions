@@ -7,7 +7,6 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   let startTime : number; 
   let delay: number = 100; 
   let itemsToAnimate : Array<ItemToDraw>;
-  let itemsToClear : Array<ItemToDraw>;
   let drawAnimationFrame  : number;
 
 
@@ -93,7 +92,11 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
     if(!allItemsFinished(itemsToAnimate)){
       itemsToAnimate.forEach((item, index) => {
           context.fillStyle = item.color;
-          context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
+          if(type === 'fill'){
+            context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
+          }else {
+            context.clearRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
+          }
       });
     }
   }
@@ -103,26 +106,12 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   function createItems() {
     clearItems(); // Clear the previous items
     startTime = performance.now(); // Reset start time
-  
-    // Repopulate and reset
-    if(type === "fill"){
-      console.log('we should fire the fill')
-//      itemsToAnimate = populateAnimationItems(5, 0, false);
-    }
-    if(type === "clear"){
-      console.log('we should fire the clear')
-//      itemsToClear = populateAnimationItems(5, 0, false);
-    }
-
     itemsToAnimate = populateAnimationItems(5, 0, false);
-    // itemsToClear = populateAnimationItems(5, 0, false);
-  
     drawAnimationFrame = requestAnimationFrame(mainFunction);
   }
 
   function clearItems(){
     itemsToAnimate = []
-    itemsToClear   = []
   }
 
 
