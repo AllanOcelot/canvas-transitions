@@ -37,16 +37,10 @@ document.addEventListener("startTransition", (event) => {
   const customEvent = event as CustomEvent<{ transitionType?: string; transitionSpeed?: number }>;
   let eventType = customEvent.detail.transitionType;
   let eventDuration = customEvent.detail.transitionSpeed;
-
-
-  console.log(eventType)
-  console.log(eventDuration)
-
   createTransition();
 })
 
 export function triggerStartTransition(transitionType : string, transitionSpeed : number) {
-  console.log('trigger transition')
   const event = new CustomEvent("startTransition", {
     detail: { transitionType, transitionSpeed }
   });
@@ -60,8 +54,8 @@ export default{};
 
 
 
+// Animation complete.
 document.addEventListener("transitionComplete", () => {
-  console.log("Animation is complete!")
   removeCanvas()
 })
 

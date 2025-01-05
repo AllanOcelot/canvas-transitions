@@ -85,10 +85,9 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
     // This condition is true, if all animated items and clearing items have completed.
     if(allItemsFinished(itemsToAnimate) && allItemsFinished(itemsToClear)){
-      console.log('Animation is completed')
+      clearItems()
       const event = new Event("transitionComplete");
       document.dispatchEvent(event);
-      clearItems()
       return;
     }
 
@@ -136,9 +135,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
         if(item.isFinished){
           return;
         }
-  
         let itemStartTime = startTime + index * delay; // Calculate the start time for this object
-    
         if (currentTime >= itemStartTime) {
           if(item.state === "Down"){
             if(itemsToClear[index].getPositionY() < winHeight - item.getHeight() ) {
@@ -161,7 +158,6 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
     }
     if(allItemsFinished(itemsToAnimate) && !allItemsFinished(itemsToClear)){
       itemsToClear.forEach((item, index) => {
-        context.fillStyle = item.color;
         context.clearRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
       });
     }
@@ -171,6 +167,8 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   // PROGRAM START'S HERE  
   // populate objects we want to animate
   function createItems(){
+    clearItems()
+    startTime = performance.now()
     itemsToAnimate = populateAnimationItems(5,0,false)
     itemsToClear   = populateAnimationItems(5,0,false)
     // start animation
@@ -180,10 +178,11 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   function clearItems(){
     itemsToAnimate = []
     itemsToClear   = []
-    startTime = performance.now()
+    if (drawAnimationFrame) cancelAnimationFrame(drawAnimationFrame);
+    if (clearAnimationFrame) cancelAnimationFrame(clearAnimationFrame);
   }
 
 
   // Fire off the animation!
-  createItems();
+  //createItems();
 }
