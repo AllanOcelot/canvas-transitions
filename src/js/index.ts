@@ -34,15 +34,10 @@ const event = new CustomEvent("startTransition", {
 
 
 document.addEventListener("startTransition", (event) => {
-  let eventType;
-  let eventDuration;
+  const customEvent = event as CustomEvent<{ transitionType?: string; transitionSpeed?: number }>;
+  let eventType = customEvent.detail.transitionType;
+  let eventDuration = customEvent.detail.transitionSpeed;
 
-  if(event.detail.transitionType){
-    eventType = event.detail.transitionType
-  }
-  if(event.detail.transitionSpeed){
-    eventDuration = event.detail.transitionSpeed
-  }
 
   console.log(eventType)
   console.log(eventDuration)
@@ -57,6 +52,9 @@ export function triggerStartTransition(transitionType : string, transitionSpeed 
   });
   document.dispatchEvent(event);
 }
+(window as any).triggerStartTransition = triggerStartTransition;
+
+export default{};
 
 
 
