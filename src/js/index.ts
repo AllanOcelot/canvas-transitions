@@ -63,8 +63,9 @@ document.addEventListener("clearTransition", (event) => {
 function clearTransition(){
   if(canvas){
     const animation = example(context, winWidth, winHeight, 'clear')
+  }else {
+    console.error('There is no canvas defined')
   }
-  console.error('There is no canvas defined')
 }
 
 

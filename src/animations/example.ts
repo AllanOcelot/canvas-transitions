@@ -75,7 +75,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
         if(!item.isFinished){
           if(item.state === "Down"){
             if(itemsToAnimate[index].getPositionY() < winHeight - item.getHeight() ) {
-              itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 20)
+              itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 50)
             }else{
               itemsToAnimate[index].isFinished = true
             }
