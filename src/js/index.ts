@@ -56,13 +56,16 @@ export default{};
 
 // Animation complete.
 document.addEventListener("transitionComplete", () => {
+  console.log('removing canvas')
   removeCanvas()
 })
 
 
 // Trigger the animation
 function createCanvas(){
+  console.log(canvas)
   if(!canvas){
+    console.log('adding canvas')
     canvas = document.createElement('canvas')
     canvas.classList.add('ct')
     canvas.width = window.innerWidth
@@ -74,7 +77,9 @@ function createCanvas(){
 
 function removeCanvas(){
   if(canvas){
+    console.log('removing canvas')
     canvas.remove()
+    canvas = null;
   }
 }
 

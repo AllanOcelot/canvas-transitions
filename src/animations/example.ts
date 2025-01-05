@@ -2,12 +2,12 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
-  let startTime = performance.now(); 
-  let delay = 100; 
+  let startTime : number; 
+  let delay: number = 100; 
   let itemsToAnimate : Array<ItemToDraw>;
   let itemsToClear : Array<ItemToDraw>;
   let drawAnimationFrame  : number;
-  let clearAnimationFrame : number;
+
 
 
   function allItemsFinished(itemsToCheck : Array<ItemToDraw>){
@@ -55,75 +55,73 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   }
 
   // Populate items we want to animate.
-  function populateAnimationItems(amount: number, offset: number, isClear: boolean){
-    let localArray = []
-    
+  function populateAnimationItems(amount: number, offset: number, isClear: boolean) {
+    let localArray = [];
     let itemHeight = winHeight / amount;
-    let itemWidth  = winWidth / amount;
+    let itemWidth = winWidth / amount;
     let itemXPos = 0;
-
-    for(let i = 0; i < amount; i++){
-      if(i > 0){
-        itemXPos += itemWidth
+  
+    for (let i = 0; i < amount; i++) {
+      if (i > 0) {
+        itemXPos += itemWidth;
       }
-      let localItem  = new ItemToDraw([itemXPos, -itemHeight], itemWidth, itemHeight, "black", isClear)
-      localArray.push(localItem)
+  
+      // Always set position off-screen at the start
+      let localItem = new ItemToDraw([itemXPos, -itemHeight], itemWidth, itemHeight, "black", isClear);
+      localArray.push(localItem);
     }
-    return localArray
+    return localArray;
   }
 
 
   // This is our main drawing function
-  function mainFunction(timestamp: number) {
-    if (allItemsFinished(itemsToAnimate)) {
-        cancelAnimationFrame(drawAnimationFrame);
-        clearAnimationFrame = requestAnimationFrame(mainFunction);
-    }
-    if(allItemsFinished(itemsToClear)){
-      cancelAnimationFrame(clearAnimationFrame);
-    }
+  let animationFrame: number; // Use a single frame ID
 
-    // This condition is true, if all animated items and clearing items have completed.
-    if(allItemsFinished(itemsToAnimate) && allItemsFinished(itemsToClear)){
-      clearItems()
+  function mainFunction(timestamp: number) {
+    // Check if all items are finished
+    const animateDone = allItemsFinished(itemsToAnimate);
+    const clearDone = allItemsFinished(itemsToClear);
+  
+    // If both animations and clearing are done, stop the animation loop
+    if (animateDone && clearDone) {
+      console.log("All animations and clearing complete.");
+      cancelAnimationFrame(animationFrame);
+      clearItems();
       const event = new Event("transitionComplete");
       document.dispatchEvent(event);
       return;
     }
-
-    // Draw and update logic
+  
+    // Perform drawing and clearing logic
     drawAnimation();
     animationLogic();
-
+  
     // Schedule the next frame
-    drawAnimationFrame = requestAnimationFrame(mainFunction);
+    animationFrame = requestAnimationFrame(mainFunction);
   }
+  
 
 
 
-  // OPERATIONS ON OBJECTS SHOULD BE ONLY DONE HERE
-  // NOT IN THE DRAWER.
-  // WHAT DOES THE DRAW-ER DO ALLAN!? IT DRAW(s)
   function animationLogic(){
-    let currentTime = performance.now(); // Current time in the animation
-
+    let currentTime = performance.now();
 
     // loop over each item we want to animate
     // ensure that time has passed ( the delay we want )
     itemsToAnimate.forEach((item, index) => {
-      if(item.isFinished){
-        return;
-      }
-
       let itemStartTime = startTime + index * delay; // Calculate the start time for this object
-  
       if (currentTime >= itemStartTime) {
-        if(item.state === "Down"){
-          if(itemsToAnimate[index].getPositionY() < winHeight - item.getHeight() ) {
-            itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 20)
-          }else{
-            itemsToAnimate[index].isFinished = true
+        if(!item.isFinished){
+          if(item.state === "Down"){
+            if(itemsToAnimate[index].getPositionY() < winHeight - item.getHeight() ) {
+              itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 20)
+            }else{
+              itemsToAnimate[index].isFinished = true
+            }
           }
+        }else{
+          console.log('the item is finished')
+          return;
         }
       }
     });
@@ -166,23 +164,28 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
   // PROGRAM START'S HERE  
   // populate objects we want to animate
-  function createItems(){
-    clearItems()
-    startTime = performance.now()
-    itemsToAnimate = populateAnimationItems(5,0,false)
-    itemsToClear   = populateAnimationItems(5,0,false)
-    // start animation
+  function createItems() {
+    clearItems(); // Clear the previous items
+    startTime = performance.now(); // Reset start time
+  
+    // Repopulate and reset
+    itemsToAnimate = populateAnimationItems(5, 0, false);
+    itemsToClear = populateAnimationItems(5, 0, false);
+  
+    console.log("Initial positions for itemsToAnimate:");
+    itemsToAnimate.forEach((item, index) => {
+      console.log(`Item ${index} Position: (${item.getPositionX()}, ${item.getPositionY()})`);
+    });
+  
     drawAnimationFrame = requestAnimationFrame(mainFunction);
   }
 
   function clearItems(){
     itemsToAnimate = []
     itemsToClear   = []
-    if (drawAnimationFrame) cancelAnimationFrame(drawAnimationFrame);
-    if (clearAnimationFrame) cancelAnimationFrame(clearAnimationFrame);
   }
 
 
   // Fire off the animation!
-  //createItems();
+  createItems();
 }
