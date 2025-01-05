@@ -4,6 +4,8 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   const ctx = context;
   let startTime = performance.now(); 
   let delay = 100; 
+  let itemsToAnimate : Array<ItemToDraw>;
+  let itemsToClear : Array<ItemToDraw>;
   let drawAnimationFrame  : number;
   let clearAnimationFrame : number;
 
@@ -86,6 +88,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
       console.log('Animation is completed')
       const event = new Event("transitionComplete");
       document.dispatchEvent(event);
+      clearItems()
       return;
     }
 
@@ -167,9 +170,20 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
   // PROGRAM START'S HERE  
   // populate objects we want to animate
-  const itemsToAnimate = populateAnimationItems(5,0,false)
-  const itemsToClear   = populateAnimationItems(5,0,false)
+  function createItems(){
+    itemsToAnimate = populateAnimationItems(5,0,false)
+    itemsToClear   = populateAnimationItems(5,0,false)
+    // start animation
+    drawAnimationFrame = requestAnimationFrame(mainFunction);
+  }
 
-  // start animation
-  drawAnimationFrame = requestAnimationFrame(mainFunction);
+  function clearItems(){
+    itemsToAnimate = []
+    itemsToClear   = []
+    startTime = performance.now()
+  }
+
+
+  // Fire off the animation!
+  createItems();
 }
