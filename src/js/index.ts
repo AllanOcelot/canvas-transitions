@@ -5,7 +5,7 @@ import { example } from '../animations/example';
 
 
 let canvas : HTMLCanvasElement;
-let context;
+let context : CanvasRenderingContext2D;
 
 let winWidth  = window.innerWidth
 let winHeight = window.innerHeight
@@ -31,6 +31,8 @@ const event = new CustomEvent("startTransition", {
   }
 });
 
+
+
 document.addEventListener("startTransition", (event) => {
   let eventType;
   let eventDuration;
@@ -48,7 +50,7 @@ document.addEventListener("startTransition", (event) => {
   createTransition();
 })
 
-window.triggerStartTransition = function(transitionType : string, transitionSpeed : number) {
+export function triggerStartTransition(transitionType : string, transitionSpeed : number) {
   console.log('trigger transition')
   const event = new CustomEvent("startTransition", {
     detail: { transitionType, transitionSpeed }
@@ -73,7 +75,7 @@ function createCanvas(){
     canvas.classList.add('ct')
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
-    context  = canvas.getContext('2d')
+    context  = canvas.getContext('2d')!
     document.body.appendChild(canvas)
   }
 }
