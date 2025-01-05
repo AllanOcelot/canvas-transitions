@@ -8,7 +8,7 @@ page1button.addEventListener('click',function(){
 })
 
 page2button.addEventListener('click',function(){
-  triggerStartTransition("example", 50);
+  triggerClearTransition("example", 50);
 })
 
 

@@ -1,5 +1,3 @@
-//import { ScreenTransition } from './ScreenTransition.js';
-
 // Import animations here
 import { example } from '../animations/example';
 
@@ -30,15 +28,45 @@ const event = new CustomEvent("startTransition", {
     transitionSpeed: 1
   }
 });
+// event for ending a transition
+const eventEnd = new CustomEvent("endTransition", {
+  detail: {
+    transitionType: "example",
+    transitionSpeed: 1
+  }
+});
 
 
 
 document.addEventListener("startTransition", (event) => {
   const customEvent = event as CustomEvent<{ transitionType?: string; transitionSpeed?: number }>;
-  let eventType = customEvent.detail.transitionType;
-  let eventDuration = customEvent.detail.transitionSpeed;
+  //let eventType = customEvent.detail.transitionType;
+  //let eventDuration = customEvent.detail.transitionSpeed;
   createTransition();
 })
+
+function createTransition(){
+  createCanvas()
+  const animation = example(context, winWidth, winHeight)
+}
+
+
+
+// we want the user to be able to clear the canvas when they want - for example, when their new page finishes loading
+document.addEventListener("clearTransition", (event) => {
+  const customEvent = eventEnd as CustomEvent<{ transitionType?: string; transitionSpeed?: number }>;
+  //let eventType = customEvent.detail.transitionType;
+  //let eventDuration = customEvent.detail.transitionSpeed;
+  clearTransition();
+})
+
+function clearTransition(){
+  if(canvas){
+    const animation = example(context, winWidth, winHeight)
+  }
+  console.error('There is no canvas defined')
+}
+
 
 export function triggerStartTransition(transitionType : string, transitionSpeed : number) {
   const event = new CustomEvent("startTransition", {
@@ -46,7 +74,20 @@ export function triggerStartTransition(transitionType : string, transitionSpeed 
   });
   document.dispatchEvent(event);
 }
+
+export function triggerClearTransition(transitionType : string, transitionSpeed : number) {
+  const event = new CustomEvent("clearTransition", {
+    detail: { transitionType, transitionSpeed }
+  });
+  document.dispatchEvent(event);
+}
+
+
 (window as any).triggerStartTransition = triggerStartTransition;
+(window as any).triggerClearTransition = triggerClearTransition;
+
+
+
 
 export default{};
 
@@ -84,7 +125,4 @@ function removeCanvas(){
 }
 
 
-function createTransition(){
-  createCanvas()
-  const animation = example(context, winWidth, winHeight)
-}
+
