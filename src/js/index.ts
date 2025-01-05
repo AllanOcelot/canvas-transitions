@@ -24,27 +24,26 @@ function resizeCanvas() {
 }
 
 document.addEventListener("transitionComplete", () => {
-  console.log('--------')
   console.log("Animation is complete!")
-  console.log('--------')
+  removeCanvas()
 });
 
 
 // Trigger the animation
 function createCanvas(){
   if(!canvas){
-    canvas = document.createElement('canvas');
+    canvas = document.createElement('canvas')
     canvas.classList.add('ct')
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
     context  = canvas.getContext('2d')
-    document.body.appendChild(canvas);
+    document.body.appendChild(canvas)
   }
 }
 
 function removeCanvas(){
   if(canvas){
-    canvas.remove;
+    canvas.remove()
   }
 }
 
