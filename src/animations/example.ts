@@ -2,13 +2,11 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
 
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
-
-
   let startTime = performance.now(); 
-  let delay = 50; 
-
+  let delay = 100; 
   let drawAnimationFrame  : number;
   let clearAnimationFrame : number;
+
 
   function allItemsFinished(itemsToCheck){
     return itemsToCheck.every(obj => obj.isFinished)
@@ -73,8 +71,6 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   }
 
 
-
-
   // This is our main drawing function
   function mainFunction(timestamp: number) {
     if (allItemsFinished(itemsToAnimate)) {
@@ -82,15 +78,16 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
         clearAnimationFrame = requestAnimationFrame(mainFunction);
     }
     if(allItemsFinished(itemsToClear)){
-      console.log('all clearing items complete')
       cancelAnimationFrame(clearAnimationFrame);
     }
 
+    // This condition is true, if all animated items and clearing items have completed.
     if(allItemsFinished(itemsToAnimate) && allItemsFinished(itemsToClear)){
       console.log('Animation is completed')
+      const event = new Event("transitionComplete");
+      document.dispatchEvent(event);
       return;
     }
-
 
     // Draw and update logic
     drawAnimation();
@@ -121,7 +118,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
       if (currentTime >= itemStartTime) {
         if(item.state === "Down"){
           if(itemsToAnimate[index].getPositionY() < winHeight - item.getHeight() ) {
-            itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 60)
+            itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 20)
           }else{
             itemsToAnimate[index].isFinished = true
           }

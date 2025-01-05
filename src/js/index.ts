@@ -23,6 +23,12 @@ function resizeCanvas() {
   }
 }
 
+document.addEventListener("transitionComplete", () => {
+  console.log('--------')
+  console.log("Animation is complete!")
+  console.log('--------')
+});
+
 
 // Trigger the animation
 function createCanvas(){
