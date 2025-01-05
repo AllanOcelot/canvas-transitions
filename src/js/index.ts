@@ -10,7 +10,7 @@ let context;
 let winWidth  = window.innerWidth
 let winHeight = window.innerHeight
 
-// handle event listener here
+// Events
 window.addEventListener('resize', () => resizeCanvas());
 function resizeCanvas() {
   if(canvas){
@@ -23,10 +23,47 @@ function resizeCanvas() {
   }
 }
 
+// Event for calling a transition
+const event = new CustomEvent("startTransition", {
+  detail: {
+    transitionType: "example",
+    transitionSpeed: 1
+  }
+});
+
+document.addEventListener("startTransition", (event) => {
+  let eventType;
+  let eventDuration;
+
+  if(event.detail.transitionType){
+    eventType = event.detail.transitionType
+  }
+  if(event.detail.transitionSpeed){
+    eventDuration = event.detail.transitionSpeed
+  }
+
+  console.log(eventType)
+  console.log(eventDuration)
+
+  createTransition();
+})
+
+window.triggerStartTransition = function(transitionType : string, transitionSpeed : number) {
+  console.log('trigger transition')
+  const event = new CustomEvent("startTransition", {
+    detail: { transitionType, transitionSpeed }
+  });
+  document.dispatchEvent(event);
+}
+
+
+
+
+
 document.addEventListener("transitionComplete", () => {
   console.log("Animation is complete!")
   removeCanvas()
-});
+})
 
 
 // Trigger the animation
@@ -52,5 +89,3 @@ function createTransition(){
   createCanvas()
   const animation = example(context, winWidth, winHeight)
 }
-
-createTransition()
