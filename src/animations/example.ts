@@ -8,7 +8,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   let clearAnimationFrame : number;
 
 
-  function allItemsFinished(itemsToCheck){
+  function allItemsFinished(itemsToCheck : Array<ItemToDraw>){
     return itemsToCheck.every(obj => obj.isFinished)
   }
 
