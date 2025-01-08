@@ -71,7 +71,7 @@ document.addEventListener("clearTransition", (event) => {
 
 function clearTransition(){
   if(canvas){
-    const animation = squaresDown(context, winWidth, winHeight, 'clear', 5, 0, 'up')
+    const animation = squaresDown(context, winWidth, winHeight, 'clear', 5, 0, 'right')
   }else {
     console.error('There is no canvas defined')
   }

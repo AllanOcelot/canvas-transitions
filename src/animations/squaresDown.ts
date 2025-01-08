@@ -64,15 +64,19 @@ export function squaresDown(context: CanvasRenderingContext2D, winWidth: number,
               }
               break
             case 'left':
-              if(itemsToAnimate[index].getPositionX() < winWidth - item.getHeight() ) {
+              if(itemsToAnimate[index].getPositionX() > 0 - item.getWidth() ) {
                 itemsToAnimate[index].setPositionX( itemsToAnimate[index].getPositionX() - 50)
               }else{
                 itemsToAnimate[index].isFinished = true
               }
               break
             case 'right':
+              if(itemsToAnimate[index].getPositionX() < winWidth + item.getWidth() ) {
+                itemsToAnimate[index].setPositionX( itemsToAnimate[index].getPositionX() + 50)
+              }else{
+                itemsToAnimate[index].isFinished = true
+              }
               break
-
           }
         }else{
           return;
@@ -89,7 +93,7 @@ export function squaresDown(context: CanvasRenderingContext2D, winWidth: number,
           if(type === 'fill'){
             context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
           }else {
-            context.clearRect(item.getPositionX(), item.getPositionY(), item.getWidth() + 1, item.getHeight() + 1);
+            context.clearRect(item.getPositionX(), item.getPositionY(), item.getWidth() + 5, item.getHeight() + 5);
           }
       });
     }

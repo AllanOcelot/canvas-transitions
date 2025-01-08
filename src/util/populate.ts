@@ -22,10 +22,12 @@ export function populateAnimationItems(amount: number, offset: number, isClear: 
         itemXPos = itemWidth * i
         break
       case 'left':
-        itemXPos = window.innerWidth -itemWidth
+        itemYPos = itemHeight * i
+        itemXPos = window.innerWidth + itemWidth * 1.2
         break
       case 'right':
-        itemXPos = -itemHeight
+        itemYPos = itemHeight * i
+        itemXPos = 0 - itemWidth * 1.2
         break
     }
 
