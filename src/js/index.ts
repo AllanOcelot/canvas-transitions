@@ -61,7 +61,7 @@ document.addEventListener("startTransition", (event) => {
   const { transitionName, transitionAmount, transitionOffset, transitionDirection } = customEvent.detail;
 
   if (transitionName) {
-    createTransition(transitionName, transitionAmount ?? 0, transitionOffset ?? 0, transitionDirection ?? "down");
+    createTransition(transitionName, transitionAmount ?? 0, transitionOffset ?? 0, transitionDirection ?? "down", 10);
   }
 });
 
@@ -72,11 +72,12 @@ function createTransition(
   transitionName: string,
   amount: number,
   offset: number,
-  direction: string
-) {
+  direction: string,
+  animationSpeed: number,
+){
   createCanvas();
   if (transitionName === 'squares' && context) {
-    squares(context, winWidth, winHeight, "fill", amount, offset, direction);
+    squares(context, winWidth, winHeight, "fill", amount, offset, direction,animationSpeed);
   }
 }
 
@@ -92,7 +93,7 @@ document.addEventListener("clearTransition", (event) => {
 
 function clearTransition(){
   if(canvas){
-    const animation = squares(context, winWidth, winHeight, 'clear', 5, 0, 'right')
+    const animation = squares(context!, winWidth, winHeight, 'clear', 5, 0, 'right', 20)
   }else {
     console.error('There is no canvas defined')
   }

@@ -1,7 +1,7 @@
 import { ItemToDraw  } from "../util/item";
 import { populateAnimationItems } from "../util/populate"
 
-export function squares(context: CanvasRenderingContext2D, winWidth: number, winHeight: number, type: string, amountOfObjects: number, amountOfOffset: number, animationDirection: string) {
+export function squares(context: CanvasRenderingContext2D, winWidth: number, winHeight: number, type: string, amountOfObjects: number, amountOfOffset: number, animationDirection: string, animationSpeed: number) {
 
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
@@ -50,28 +50,28 @@ export function squares(context: CanvasRenderingContext2D, winWidth: number, win
           switch(animationDirection.toLowerCase()){
             case 'up':
               if(itemsToAnimate[index].getPositionY() > 0 ) {
-                itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() - 50)
+                itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() - 5 * animationSpeed)
               }else{
                 itemsToAnimate[index].isFinished = true
               }
               break
             case 'down':
               if(itemsToAnimate[index].getPositionY() < winHeight - item.getHeight() ) {
-                itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 50)
+                itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 5 * animationSpeed)
               }else{
                 itemsToAnimate[index].isFinished = true
               }
               break
             case 'left':
               if(itemsToAnimate[index].getPositionX() > 0 - item.getWidth() ) {
-                itemsToAnimate[index].setPositionX( itemsToAnimate[index].getPositionX() - 50)
+                itemsToAnimate[index].setPositionX( itemsToAnimate[index].getPositionX() - 5 * animationSpeed)
               }else{
                 itemsToAnimate[index].isFinished = true
               }
               break
             case 'right':
               if(itemsToAnimate[index].getPositionX() < winWidth + item.getWidth() ) {
-                itemsToAnimate[index].setPositionX( itemsToAnimate[index].getPositionX() + 50)
+                itemsToAnimate[index].setPositionX( itemsToAnimate[index].getPositionX() + 5 * animationSpeed)
               }else{
                 itemsToAnimate[index].isFinished = true
               }

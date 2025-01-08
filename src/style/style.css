@@ -5,6 +5,7 @@ body {
   display: flex;
   flex: 1 auto;
   flex-direction: column;
+  font-family: 'Verdana', 'Geneva', sans-serif;
 }
 
 header {
@@ -13,7 +14,12 @@ header {
   padding: 0 20px;
   height: 60px;
   align-items: center;
-  border-bottom: 1px solid rgba(0,0,0,0.2);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  background: #75819f;
+  color: #fff;
+  text-align: center;
+  justify-content: center;
+  letter-spacing: 1px;
 }
 
 .container {
