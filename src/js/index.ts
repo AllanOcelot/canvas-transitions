@@ -106,7 +106,7 @@ export default{};
 
 
 // Animation complete.
-document.addEventListener("transitionComplete", () => {
+document.addEventListener("clearComplete", () => {
   console.log('removing canvas')
   removeCanvas()
 })

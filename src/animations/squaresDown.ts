@@ -22,7 +22,8 @@ export function squaresDown(context: CanvasRenderingContext2D, winWidth: number,
       console.log("All animations complete.");
       cancelAnimationFrame(drawAnimationFrame);
       clearItems();
-      const event = new Event("fillComplete");
+      const event = new Event(type + "Complete");
+      console.log(type)
       document.dispatchEvent(event);
       return;
     }
@@ -63,6 +64,11 @@ export function squaresDown(context: CanvasRenderingContext2D, winWidth: number,
               }
               break
             case 'left':
+              if(itemsToAnimate[index].getPositionX() < winWidth - item.getHeight() ) {
+                itemsToAnimate[index].setPositionX( itemsToAnimate[index].getPositionX() - 50)
+              }else{
+                itemsToAnimate[index].isFinished = true
+              }
               break
             case 'right':
               break

@@ -8,19 +8,29 @@ export function populateAnimationItems(amount: number, offset: number, isClear: 
   let itemYPos:number    = 0;
 
 
-  switch(animationDirection.toLowerCase()){
-    case 'up':
-      itemYPos = window.innerHeight + itemHeight
-      break
-    case 'down':
-      itemYPos = -itemHeight
-      break
-  }
+
 
 
   for (let i = 0; i < amount; i++) {
+    switch(animationDirection.toLowerCase()){
+      case 'up':
+        itemYPos = window.innerHeight + itemHeight
+        itemXPos = 0 - itemWidth * i
+        break
+      case 'down':
+        itemYPos = -itemHeight
+        break
+      case 'left':
+        itemXPos = window.innerWidth -itemWidth
+        break
+      case 'right':
+        itemXPos = -itemHeight
+        break
+    }
+
+
     if (i > 0) {
-      itemXPos += itemWidth;
+      //itemXPos += itemWidth;
     }
 
     // Always set position off-screen at the start
