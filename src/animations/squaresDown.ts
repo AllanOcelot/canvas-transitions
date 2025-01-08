@@ -1,7 +1,7 @@
 import { ItemToDraw  } from "../util/item";
 import { populateAnimationItems } from "../util/populate"
 
-export function squaresDown(context: CanvasRenderingContext2D, winWidth: number, winHeight: number, type: string, amountOfObjects: number, amountOfOffset: number) {
+export function squaresDown(context: CanvasRenderingContext2D, winWidth: number, winHeight: number, type: string, amountOfObjects: number, amountOfOffset: number, animationDirection: string) {
 
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
@@ -45,12 +45,28 @@ export function squaresDown(context: CanvasRenderingContext2D, winWidth: number,
       let itemStartTime = startTime + index * delay; // Calculate the start time for this object
       if (currentTime >= itemStartTime) {
         if(!item.isFinished){
-          if(item.state === "moveDown"){
-            if(itemsToAnimate[index].getPositionY() < winHeight - item.getHeight() ) {
-              itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 50)
-            }else{
-              itemsToAnimate[index].isFinished = true
-            }
+
+          // How should they animate?
+          switch(animationDirection.toLowerCase()){
+            case 'up':
+              if(itemsToAnimate[index].getPositionY() > 0 ) {
+                itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() - 50)
+              }else{
+                itemsToAnimate[index].isFinished = true
+              }
+              break
+            case 'down':
+              if(itemsToAnimate[index].getPositionY() < winHeight - item.getHeight() ) {
+                itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 50)
+              }else{
+                itemsToAnimate[index].isFinished = true
+              }
+              break
+            case 'left':
+              break
+            case 'right':
+              break
+
           }
         }else{
           return;
@@ -78,7 +94,7 @@ export function squaresDown(context: CanvasRenderingContext2D, winWidth: number,
   function createItems() {
     clearItems(); // Clear the previous items
     startTime = performance.now(); // Reset start time
-    itemsToAnimate = populateAnimationItems(amountOfObjects, amountOfOffset, false);
+    itemsToAnimate = populateAnimationItems(amountOfObjects, amountOfOffset, false, animationDirection);
     drawAnimationFrame = requestAnimationFrame(mainFunction);
   }
 
