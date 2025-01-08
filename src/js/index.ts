@@ -146,6 +146,16 @@ function createCanvas(){
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
     context  = canvas.getContext('2d')!
+
+    // Apply the  CSS styles
+    canvas.style.position = 'fixed';
+    canvas.style.left = '0';
+    canvas.style.top = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.zIndex = '500';
+    canvas.style.pointerEvents = 'none';
+
     document.body.appendChild(canvas)
   }
 }
