@@ -4,7 +4,7 @@
 // Canvas creation
 export function createCanvas(canvasImport : HTMLCanvasElement | null){
 
-  let canvas: HTMLCanvasElement | null;
+  let canvas: HTMLCanvasElement;
 
   if(!canvasImport){
     canvas = document.createElement('canvas')

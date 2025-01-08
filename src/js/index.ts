@@ -6,7 +6,7 @@ import { squares } from '../animations/squares';
 
 
 // our canvas element.
-let canvas: HTMLCanvasElement | null;
+let canvas: HTMLCanvasElement | null = null;
 
 let winWidth  = window.innerWidth
 let winHeight = window.innerHeight
