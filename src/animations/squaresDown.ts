@@ -1,5 +1,5 @@
 import { ItemToDraw  } from "../util/item";
-import { populateAnimationItems} from "../util/populate"
+import { populateAnimationItems } from "../util/populate"
 
 export function squaresDown(context: CanvasRenderingContext2D, winWidth: number, winHeight: number, type: string, amountOfObjects: number, amountOfOffset: number) {
 
@@ -45,7 +45,7 @@ export function squaresDown(context: CanvasRenderingContext2D, winWidth: number,
       let itemStartTime = startTime + index * delay; // Calculate the start time for this object
       if (currentTime >= itemStartTime) {
         if(!item.isFinished){
-          if(item.state === "Down"){
+          if(item.state === "moveDown"){
             if(itemsToAnimate[index].getPositionY() < winHeight - item.getHeight() ) {
               itemsToAnimate[index].setPositionY( itemsToAnimate[index].getPositionY() + 50)
             }else{

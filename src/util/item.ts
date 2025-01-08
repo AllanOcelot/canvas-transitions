@@ -3,18 +3,21 @@ export class ItemToDraw {
   private height: number
   private position: [number, number]
   public color: string
-  public state: string
   public isFinished: boolean = false
   private isClear:   boolean = false
+  private states = ['moveDown', 'moveUp', 'moveLeft', 'moveRight', 'expand', 'shrink']
+  public state: string = "moveDown"
 
   constructor(position:[number, number], width: number, height: number, color: string, isClear: boolean) {
     this.width    = width
     this.height   = height
     this.color    = color
     this.position = position
-    this.state    = "Down"
     this.isClear  = isClear
   }
+
+
+
 
   getPositionX(){
     return this.position[0]
