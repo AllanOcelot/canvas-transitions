@@ -1,5 +1,5 @@
 // Import animations here
-import { example } from '../animations/example';
+import { squaresDown } from '../animations/squaresDown';
 
 
 let canvas : HTMLCanvasElement;
@@ -7,6 +7,15 @@ let context : CanvasRenderingContext2D;
 
 let winWidth  = window.innerWidth
 let winHeight = window.innerHeight
+
+
+
+const transitions = {
+  squaresDown: squaresDown,
+}
+
+
+
 
 // Events
 window.addEventListener('resize', () => resizeCanvas());
@@ -47,7 +56,7 @@ document.addEventListener("startTransition", (event) => {
 
 function createTransition(){
   createCanvas()
-  const animation = example(context, winWidth, winHeight, 'fill')
+  const animation = squaresDown(context, winWidth, winHeight, 'fill')
 }
 
 
@@ -62,7 +71,7 @@ document.addEventListener("clearTransition", (event) => {
 
 function clearTransition(){
   if(canvas){
-    const animation = example(context, winWidth, winHeight, 'clear')
+    const animation = squaresDown(context, winWidth, winHeight, 'clear')
   }else {
     console.error('There is no canvas defined')
   }

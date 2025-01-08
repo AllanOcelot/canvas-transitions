@@ -1,7 +1,7 @@
 import { ItemToDraw  } from "../util/item";
 import { populateAnimationItems} from "../util/populate"
 
-export function example(context: CanvasRenderingContext2D, winWidth: number, winHeight: number, type: string) {
+export function squaresDown(context: CanvasRenderingContext2D, winWidth: number, winHeight: number, type: string) {
 
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
@@ -36,13 +36,11 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
   }
   
 
-
-
+  // Logic for the animation goes here.
   function animationLogic(){
     let currentTime = performance.now();
 
     // loop over each item we want to animate
-    // ensure that time has passed ( the delay we want )
     itemsToAnimate.forEach((item, index) => {
       let itemStartTime = startTime + index * delay; // Calculate the start time for this object
       if (currentTime >= itemStartTime) {
@@ -55,13 +53,13 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
             }
           }
         }else{
-          console.log('the item is finished')
           return;
         }
       }
     });
   }
 
+  // Draw the animation.
   function drawAnimation() {
     if(!allItemsFinished(itemsToAnimate)){
       itemsToAnimate.forEach((item, index) => {
