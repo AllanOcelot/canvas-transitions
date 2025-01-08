@@ -15,10 +15,11 @@ export function populateAnimationItems(amount: number, offset: number, isClear: 
     switch(animationDirection.toLowerCase()){
       case 'up':
         itemYPos = window.innerHeight + itemHeight
-        itemXPos = 0 - itemWidth * i
+        itemXPos = itemWidth * i
         break
       case 'down':
         itemYPos = -itemHeight
+        itemXPos = itemWidth * i
         break
       case 'left':
         itemXPos = window.innerWidth -itemWidth

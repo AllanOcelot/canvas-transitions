@@ -89,7 +89,7 @@ export function squaresDown(context: CanvasRenderingContext2D, winWidth: number,
           if(type === 'fill'){
             context.fillRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
           }else {
-            context.clearRect(item.getPositionX(), item.getPositionY(), item.getWidth(), item.getHeight());
+            context.clearRect(item.getPositionX(), item.getPositionY(), item.getWidth() + 1, item.getHeight() + 1);
           }
       });
     }
