@@ -1,7 +1,7 @@
 import { ItemToDraw  } from "../util/item";
 import { populateAnimationItems } from "../util/populate"
 
-export function squares(context: CanvasRenderingContext2D, winWidth: number, winHeight: number, type: string, amountOfObjects: number, amountOfOffset: number, animationDirection: string, animationSpeed: number) {
+export function squares(context: CanvasRenderingContext2D, type: string, winWidth: number, winHeight: number, amountOfObjects: number, amountOfOffset: number, animationDirection: string, animationSpeed: number) {
 
   // Our 2d reference for canvas, standard is CTX.
   const ctx = context;
@@ -24,6 +24,7 @@ export function squares(context: CanvasRenderingContext2D, winWidth: number, win
       clearItems();
       const event = new Event(type + "Complete");
       document.dispatchEvent(event);
+      console.log(event)
       return;
     }
   
