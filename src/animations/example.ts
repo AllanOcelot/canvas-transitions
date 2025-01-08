@@ -1,4 +1,5 @@
 import { ItemToDraw  } from "../util/item";
+import { populateAnimationItems} from "../util/populate"
 
 export function example(context: CanvasRenderingContext2D, winWidth: number, winHeight: number, type: string) {
 
@@ -15,38 +16,11 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
     return itemsToCheck.every(obj => obj.isFinished)
   }
 
-  // Each item drawn to scheme should follow a basic class.
-  // this will be imported in future.
-
-
-  // Populate items we want to animate.
-  function populateAnimationItems(amount: number, offset: number, isClear: boolean) {
-    let localArray = [];
-    let itemHeight = winHeight / amount;
-    let itemWidth = winWidth / amount;
-    let itemXPos = 0;
-  
-    for (let i = 0; i < amount; i++) {
-      if (i > 0) {
-        itemXPos += itemWidth;
-      }
-  
-      // Always set position off-screen at the start
-      let localItem = new ItemToDraw([itemXPos, -itemHeight], itemWidth, itemHeight, "black", isClear);
-      localArray.push(localItem);
-    }
-    return localArray;
-  }
-
-
-  // This is our main drawing function
-  let animationFrame: number;
-
   function mainFunction(timestamp: number) {
     // Check if all items are finished  
     if (allItemsFinished(itemsToAnimate)) {
       console.log("All animations complete.");
-      cancelAnimationFrame(animationFrame);
+      cancelAnimationFrame(drawAnimationFrame);
       clearItems();
       const event = new Event("fillComplete");
       document.dispatchEvent(event);
@@ -58,7 +32,7 @@ export function example(context: CanvasRenderingContext2D, winWidth: number, win
     animationLogic();
   
     // Schedule the next frame
-    animationFrame = requestAnimationFrame(mainFunction);
+    drawAnimationFrame = requestAnimationFrame(mainFunction);
   }
   
 
