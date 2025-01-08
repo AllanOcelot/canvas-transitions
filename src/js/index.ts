@@ -1,9 +1,9 @@
 // Import animations here
-import { squaresDown } from '../animations/squaresDown';
+import { squares } from '../animations/squares';
 
 
-let canvas : HTMLCanvasElement;
-let context : CanvasRenderingContext2D;
+let canvas: HTMLCanvasElement | null = null;
+let context: CanvasRenderingContext2D | null = null;
 
 let winWidth  = window.innerWidth
 let winHeight = window.innerHeight
@@ -11,7 +11,7 @@ let winHeight = window.innerHeight
 
 
 const transitions = {
-  squaresDown: squaresDown,
+  squares: squares,
 }
 
 
@@ -33,8 +33,11 @@ function resizeCanvas() {
 // Event for calling a transition
 const event = new CustomEvent("startTransition", {
   detail: {
-    transitionType: "example",
-    transitionSpeed: 1
+    transitionName: 'Squares',
+    amount: null,
+    offset: null,
+    direction: 'down',
+    transitionSpeed: 1,
   }
 });
 // event for ending a transition
@@ -48,15 +51,33 @@ const eventEnd = new CustomEvent("endTransition", {
 
 
 document.addEventListener("startTransition", (event) => {
-  const customEvent = event as CustomEvent<{ transitionType?: string; transitionSpeed?: number }>;
-  //let eventType = customEvent.detail.transitionType;
-  //let eventDuration = customEvent.detail.transitionSpeed;
-  createTransition();
-})
+  const customEvent = event as CustomEvent<{
+    transitionName?: string;
+    transitionAmount?: number;
+    transitionOffset?: number;
+    transitionDirection?: string;
+  }>;
 
-function createTransition(){
-  createCanvas()
-  const animation = squaresDown(context, winWidth, winHeight, 'fill', 5, 0, 'down')
+  const { transitionName, transitionAmount, transitionOffset, transitionDirection } = customEvent.detail;
+
+  if (transitionName) {
+    createTransition(transitionName, transitionAmount ?? 0, transitionOffset ?? 0, transitionDirection ?? "down");
+  }
+});
+
+
+
+// Function to create all animations
+function createTransition(
+  transitionName: string,
+  amount: number,
+  offset: number,
+  direction: string
+) {
+  createCanvas();
+  if (transitionName === 'squares' && context) {
+    squares(context, winWidth, winHeight, "fill", amount, offset, direction);
+  }
 }
 
 
@@ -71,16 +92,16 @@ document.addEventListener("clearTransition", (event) => {
 
 function clearTransition(){
   if(canvas){
-    const animation = squaresDown(context, winWidth, winHeight, 'clear', 5, 0, 'right')
+    const animation = squares(context, winWidth, winHeight, 'clear', 5, 0, 'right')
   }else {
     console.error('There is no canvas defined')
   }
 }
 
 
-export function triggerStartTransition(transitionType : string, transitionSpeed : number) {
+export function triggerStartTransition(transitionName : string, transitionAmount: number, transitionOffset: number, transitionDirection: string) {
   const event = new CustomEvent("startTransition", {
-    detail: { transitionType, transitionSpeed }
+    detail: { transitionName, transitionAmount, transitionOffset, transitionDirection }
   });
   document.dispatchEvent(event);
 }
@@ -132,8 +153,9 @@ function createCanvas(){
 function removeCanvas(){
   if(canvas){
     console.log('removing canvas')
-    canvas.remove()
+    canvas.remove();
     canvas = null;
+    context = null;
   }
 }
 
