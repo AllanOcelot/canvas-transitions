@@ -1,3 +1,4 @@
+import { triggerTransition } from '../src/js/index.ts'
 
 // this is how a user would call our events
 const page1button = document.getElementById('button1')

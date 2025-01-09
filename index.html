@@ -37,17 +37,6 @@
         </div>
       </div>
 
-
-
-    <!-- Use unbuilt source files in development and built files in production -->
-    <script type="module">
-      if (import.meta.env.MODE === 'development') {
-        import('/src/js/index.ts');
-      } else {
-        import('/dist/canvas-transitions.es.js');
-      }
-    </script>
-
     <!-- Import example use case , dont forget users need to import the lib to use-->
     <script type="module" src="./public/example_user.js"></script>
   </body>

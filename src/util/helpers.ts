@@ -29,10 +29,8 @@ export function createCanvas(canvasImport : HTMLCanvasElement | null){
 }
 
 export function canvasGetContext(canvasImport : HTMLCanvasElement | null){
-  console.log('hi')
   console.log(canvasImport)
   if(canvasImport){
-
     return canvasImport.getContext('2d')!
   }
 }
